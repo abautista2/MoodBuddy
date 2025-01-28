@@ -24,6 +24,7 @@ export default function TabsLayout() {
     name = "index" 
     options={{
       headerTitle: "MoodBuddy",
+      tabBarLabel: "Home",
       tabBarIcon: ({focused, size, color}) => 
       <Ionicons 
       name={focused ? "home-sharp" : "home-outline"}
@@ -36,6 +37,7 @@ export default function TabsLayout() {
     name = "chatbot" 
     options={{
       headerTitle: "Chatbot",
+      tabBarLabel: "Chatbot",
       tabBarIcon: ({focused,size, color}) => 
       <MaterialCommunityIcons 
       name={focused ? "robot-excited" : "robot-excited-outline"} 
@@ -48,6 +50,7 @@ export default function TabsLayout() {
     name = "journal" 
     options={{
       headerTitle: "Journal",
+      tabBarLabel: "Journal",
       tabBarIcon: ({focused,size, color}) => 
       <Ionicons 
       name={focused ? "book" : "book-outline"} 
@@ -60,6 +63,7 @@ export default function TabsLayout() {
     name = "habit" 
     options={{
       headerTitle: "Habit",
+      tabBarLabel: "Habit",
       tabBarIcon: ({ focused, size, color }) => 
       <Plus 
       name={focused ? "plus-minus" : "plus-minus-variant"} 
@@ -72,18 +76,13 @@ export default function TabsLayout() {
     name = "achievements" 
     options={{
       headerTitle: "Achievements",
+      tabBarLabel: "Achievements",
       tabBarIcon: ({ focused, size, color }) =>
         <Ionicons 
           name={focused ? "trophy" : "trophy-outline"} 
           size={size} 
           color={color} 
         />
-      }}/>
-
-    <Tabs.Screen 
-    name = "+not-found" 
-    options={{
-      headerShown: false
       }}/>
 
   </Tabs>
