@@ -28,10 +28,10 @@ export default function Button({ label, theme }: Props) {
   return (
     <View style = {styles.centerAll}>
       <View style = {[styles.text,{color: '#fff'}]}>
-          <h1>Habit List</h1>
+          <Text style = {styles.h1}>Habit List</Text>
             {habitList.map((item, index) => (
               <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h2 key={index}>{item}</h2>
+                <Text style = {styles.h2} key={index}>{item}</Text>
                 <Pressable onPress={() => removeHandler(item)}>
                   <FontAwesome
                   name="minus"
@@ -117,6 +117,18 @@ export default function Button({ label, theme }: Props) {
 const styles = StyleSheet.create({
   text:{
     color:"#000000",
+    fontSize: 20,
+    margin: 10,
+    textAlign: "center",
+  },
+  h1:{
+    color:"#FFFFFF",
+    fontSize: 40,
+    margin: 10,
+    textAlign: "center",
+  },
+  h2:{
+    color:"#FFFFFF",
     fontSize: 20,
     margin: 10,
     textAlign: "center",
