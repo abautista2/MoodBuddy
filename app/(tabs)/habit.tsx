@@ -1,13 +1,15 @@
 import { View, StyleSheet } from "react-native";
 import React from "react";
-import Button from "@/components/Button";
+import HabitBuilder from "@/components/HabitBuilder";
+
+
 
 export default function Habit() {
 
   return (
     <View style = {styles.container}>
       
-      <Button label = "Add a habit" theme="addHabit"/>
+      <HabitBuilder label="Add a habit" />
     </View>
   );
 }
