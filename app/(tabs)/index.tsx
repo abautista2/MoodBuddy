@@ -2,17 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FontAwesome } from '@expo/vector-icons';
-import { useIsFocused } from '@react-navigation/native'; // Import the hook
+import { useIsFocused } from '@react-navigation/native'; 
+import { Calendar, LocaleConfig } from 'react-native-calendars'; 
 
 type Habit = {
     name: string;
     completed: boolean;
 };
 
+type MarkedDates = {
+    [date: string]: { selected: boolean; marked: boolean; selectedColor: string };
+};
+
 export default function HomeScreen() {
     const [habits, setHabits] = useState<Habit[]>([]);
     const [lastResetDate, setLastResetDate] = useState<string>(new Date().toDateString());
-    const isFocused = useIsFocused(); // Track if the screen is focused
+    const isFocused = useIsFocused(); 
+    const [markedDates, setMarkedDates] = useState<MarkedDates>({});
+
 
     // Load habits and last reset date from AsyncStorage
     useEffect(() => {
@@ -20,11 +27,16 @@ export default function HomeScreen() {
             try {
                 const storedHabits = await AsyncStorage.getItem('@habits');
                 const storedDate = await AsyncStorage.getItem('@lastResetDate');
+                const storedMarkedDates = await AsyncStorage.getItem('@markedDates');
+
                 if (storedHabits !== null) {
                     setHabits(JSON.parse(storedHabits));
                 }
                 if (storedDate !== null) {
                     setLastResetDate(storedDate);
+                }
+                if (storedMarkedDates !== null) {
+                    setMarkedDates(JSON.parse(storedMarkedDates));
                 }
             } catch (error) {
                 console.error('Error loading data:', error);
@@ -57,10 +69,40 @@ export default function HomeScreen() {
         updatedHabits[index].completed = !updatedHabits[index].completed;
         setHabits(updatedHabits);
         AsyncStorage.setItem('@habits', JSON.stringify(updatedHabits));
+
+        const allCompleted = updatedHabits.every((habit) => habit.completed);
+        const today = new Date().toDateString();
+        const updatedMarkedDates = { ...markedDates };
+
+        if (allCompleted) {
+            updatedMarkedDates[today] = { selected: true, marked: true, selectedColor: 'green' };
+        } else {
+            delete updatedMarkedDates[today];
+        }
+
+        setMarkedDates(updatedMarkedDates);
+        AsyncStorage.setItem('@markedDates', JSON.stringify(updatedMarkedDates));
     };
 
     return (
         <View style={styles.container}>
+            <Calendar
+                markedDates={markedDates} // Pass marked dates to the calendar
+                markingType="custom"
+                theme={{
+                    selectedDayBackgroundColor: 'green',
+                    todayTextColor: 'yellow',
+                    calendarBackground: 'transparent', 
+                    'stylesheet.calendar.header': {
+                        dayTextAtIndex0: {
+                        color: 'red'
+                        },
+                        dayTextAtIndex6: {
+                        color: 'red'
+                        }
+                    }
+                }}
+            />
             <Text style={styles.title}>Today's Habits</Text>
             {habits.map((habit, index) => (
                 <Pressable
