@@ -3,7 +3,7 @@ import { View, Text, Pressable, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FontAwesome } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native'; 
-import { Calendar, LocaleConfig } from 'react-native-calendars'; 
+import { Calendar } from 'react-native-calendars'; 
 
 type Habit = {
     name: string;
@@ -77,7 +77,7 @@ export default function HomeScreen() {
         if (allCompleted) {
             updatedMarkedDates[today] = { selected: true, marked: true, selectedColor: 'green' };
         } else {
-            delete updatedMarkedDates[today];
+            updatedMarkedDates[today] = { selected: true, marked: true, selectedColor: 'red' };
         }
 
         setMarkedDates(updatedMarkedDates);
@@ -90,39 +90,40 @@ export default function HomeScreen() {
                 markedDates={markedDates} // Pass marked dates to the calendar
                 markingType="custom"
                 theme={{
-                    selectedDayBackgroundColor: 'green',
-                    todayTextColor: 'yellow',
+                    
                     calendarBackground: 'transparent', 
-                    'stylesheet.calendar.header': {
-                        dayTextAtIndex0: {
-                        color: 'red'
-                        },
-                        dayTextAtIndex6: {
-                        color: 'red'
-                        }
-                    }
+                    textSectionTitleColor: '#fff', // Month and year text color
+                    todayTextColor: '#fff', // Today's date text color
+                    selectedDayBackgroundColor: 'green', // Selected date background color
+                    arrowColor: '#fff', // Arrow color for month navigation
+                    monthTextColor: '#fff', // Month text color
+                    textDisabledColor: '#666', // Disabled date text color
                 }}
             />
             <Text style={styles.title}>Today's Habits</Text>
-            {habits.map((habit, index) => (
-                <Pressable
-                    key={index}
-                    onPress={() => toggleCompletion(index)}
-                    style={styles.habitItem}
-                >
-                    <Text
-                        style={[
-                            styles.habitText,
-                            habit.completed && styles.completedHabit,
-                        ]}
+            {habits.length === 0 ? (
+                <Text style={styles.noHabitsText}>Please add your habits in the Habit tab.</Text>
+            ) : (
+                habits.map((habit, index) => (
+                    <Pressable
+                        key={index}
+                        onPress={() => toggleCompletion(index)}
+                        style={styles.habitItem}
                     >
-                        {habit.name}
-                    </Text>
-                    {habit.completed && (
-                        <FontAwesome name="check" size={18} color="green" />
-                    )}
-                </Pressable>
-            ))}
+                        <Text
+                            style={[
+                                styles.habitText,
+                                habit.completed && styles.completedHabit,
+                            ]}
+                        >
+                            {habit.name}
+                        </Text>
+                        {habit.completed && (
+                            <FontAwesome name="check" size={18} color="green" />
+                        )}
+                    </Pressable>
+                ))
+            )}
         </View>
     );
 }
@@ -154,5 +155,11 @@ const styles = StyleSheet.create({
     completedHabit: {
         textDecorationLine: 'line-through',
         color: '#888',
+    },
+    noHabitsText: {
+        fontSize: 16,
+        color: 'white',
+        textAlign: 'center',
+        marginTop: 20,
     },
 });
